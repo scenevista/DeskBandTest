@@ -137,5 +137,9 @@
     </None>
     <None Include="StrongNameKey.snk" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\ScreenShot.PNG" />
+    <Content Include="Images\UIDesigner.PNG" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
