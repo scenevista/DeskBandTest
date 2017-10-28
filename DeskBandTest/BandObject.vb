@@ -10,7 +10,7 @@ Public Class BandObject
     Friend Shared ReadOnly Title As String = "网速监控" '显示在选项里面的名称
     Friend Shared ReadOnly Help As String = "测试工具条"
 
-    Protected BandObjectSite As IntPtr
+    Protected BandObjectSite As IntPtr = IntPtr.Zero
     Protected parentWindowHandle As IntPtr = IntPtr.Zero
     Protected mRenderComposited As Boolean = True
     Protected mSettings As New Settings
@@ -206,6 +206,7 @@ Public Class BandObject
         If pUnkSite Is Nothing Then
             SaveSettings()
             parentWindowHandle = IntPtr.Zero
+            mCounter.Dispose()
             Dispose(True)
             GC.Collect()
         Else
@@ -223,8 +224,7 @@ Public Class BandObject
     End Function
 
     Public Function GetSite(ByRef riid As Guid, <MarshalAs(UnmanagedType.IUnknown)> ByRef ppvSite As IntPtr) As HResult Implements IObjectWithSite.GetSite
-        ppvSite = BandObjectSite
-        Return HResult.S_OK
+        Return Marshal.QueryInterface(BandObjectSite, riid, ppvSite)
     End Function
 #End Region
 #Region "IPersistStream"
@@ -307,12 +307,12 @@ Public Class BandObject
         '
         Me.ContextMainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.关于ToolStripMenuItem})
         Me.ContextMainMenu.Name = "ContextMenuStrip1"
-        Me.ContextMainMenu.Size = New System.Drawing.Size(153, 48)
+        Me.ContextMainMenu.Size = New System.Drawing.Size(101, 26)
         '
         '关于ToolStripMenuItem
         '
         Me.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem"
-        Me.关于ToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.关于ToolStripMenuItem.Size = New System.Drawing.Size(100, 22)
         Me.关于ToolStripMenuItem.Text = "关于"
         '
         'LUpSpeed
@@ -321,7 +321,7 @@ Public Class BandObject
         Me.LUpSpeed.AutoSize = True
         Me.LUpSpeed.Font = New System.Drawing.Font("Segoe UI", 0.13!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch, CType(0, Byte))
         Me.LUpSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LUpSpeed.Location = New System.Drawing.Point(53, 1)
+        Me.LUpSpeed.Location = New System.Drawing.Point(63, 1)
         Me.LUpSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LUpSpeed.Name = "LUpSpeed"
         Me.LUpSpeed.Size = New System.Drawing.Size(37, 17)
@@ -336,7 +336,7 @@ Public Class BandObject
         Me.LDnSpeed.AutoSize = True
         Me.LDnSpeed.Font = New System.Drawing.Font("Segoe UI", 0.13!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
         Me.LDnSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LDnSpeed.Location = New System.Drawing.Point(53, 21)
+        Me.LDnSpeed.Location = New System.Drawing.Point(63, 21)
         Me.LDnSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LDnSpeed.Name = "LDnSpeed"
         Me.LDnSpeed.Size = New System.Drawing.Size(37, 17)
@@ -362,20 +362,23 @@ Public Class BandObject
         '
         'TableLayoutPanel1
         '
+        Me.TableLayoutPanel1.AutoSize = True
         Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.Controls.Add(Me.LUpSpeed, 1, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.LDnSpeed, 1, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.LCapDn, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.LCapUp, 0, 0)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
+        Me.TableLayoutPanel1.MinimumSize = New System.Drawing.Size(100, 40)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(90, 40)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(100, 40)
         Me.TableLayoutPanel1.TabIndex = 4
         Me.ToolTip1.SetToolTip(Me.TableLayoutPanel1, "这是内容")
         '
@@ -387,17 +390,20 @@ Public Class BandObject
         '
         'BandObject
         '
+        Me.AutoSize = True
         Me.BackColor = System.Drawing.Color.Black
         Me.ContextMenuStrip = Me.ContextMainMenu
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.DoubleBuffered = True
         Me.Margin = New System.Windows.Forms.Padding(0)
+        Me.MinimumSize = New System.Drawing.Size(100, 40)
         Me.Name = "BandObject"
-        Me.Size = New System.Drawing.Size(90, 40)
+        Me.Size = New System.Drawing.Size(100, 40)
         Me.ContextMainMenu.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
