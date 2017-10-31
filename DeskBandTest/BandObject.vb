@@ -363,6 +363,7 @@ Public Class BandObject
         'TableLayoutPanel1
         '
         Me.TableLayoutPanel1.AutoSize = True
+        Me.TableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanel1.ColumnCount = 2
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
@@ -384,13 +385,20 @@ Public Class BandObject
         '
         'ToolTip1
         '
+        Me.ToolTip1.AutoPopDelay = 5000
+        Me.ToolTip1.InitialDelay = 500
         Me.ToolTip1.IsBalloon = True
+        Me.ToolTip1.ReshowDelay = 0
+        Me.ToolTip1.ShowAlways = True
         Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
         Me.ToolTip1.ToolTipTitle = "网速监控"
+        Me.ToolTip1.UseAnimation = False
+        Me.ToolTip1.UseFading = False
         '
         'BandObject
         '
         Me.AutoSize = True
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.Black
         Me.ContextMenuStrip = Me.ContextMainMenu
         Me.Controls.Add(Me.TableLayoutPanel1)
