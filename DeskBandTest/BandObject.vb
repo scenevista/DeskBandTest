@@ -10,12 +10,12 @@ Public Class BandObject
     Friend Shared ReadOnly Title As String = "网速监控" '显示在选项里面的名称
     Friend Shared ReadOnly Help As String = "测试工具条"
 
-    Protected BandObjectSite As IntPtr = IntPtr.Zero
-    Protected parentWindowHandle As IntPtr = IntPtr.Zero
-    Protected mRenderComposited As Boolean = True
-    Protected mSettings As New Settings
-    Protected mSettingsChanged As Boolean = False
-    Protected mCounter As NetworkTrafficCounter
+    Private BandObjectSite As IntPtr = IntPtr.Zero
+    Private parentWindowHandle As IntPtr = IntPtr.Zero
+    Private mRenderComposited As Boolean = True
+    Private mSettings As New Settings
+    Private mSettingsChanged As Boolean = False
+    Private mCounter As NetworkTrafficCounter
 
 #Region "Properties"
     Public ReadOnly Property TotalBytesDown As Long

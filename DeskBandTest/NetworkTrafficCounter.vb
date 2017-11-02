@@ -1,7 +1,7 @@
 ﻿Imports System.Net.NetworkInformation
 Imports System.Threading
 
-Public Class NetworkTrafficCounter
+Friend NotInheritable Class NetworkTrafficCounter
     Implements IDisposable
 
     Public Sub New()
@@ -16,11 +16,11 @@ Public Class NetworkTrafficCounter
     Public Event Tick(ByVal upSpeed As Long, ByVal downSpeed As Long)
     Public Event NetworkInterfaceChanged()
 
-    Protected timer As Timer
-    Protected receiveCounters As List(Of PerformanceCounter)
-    Protected sendCounters As List(Of PerformanceCounter)
-    Protected baseSendBytes As Long
-    Protected baseReceiveBytes As Long
+    Private timer As Timer
+    Private receiveCounters As List(Of PerformanceCounter)
+    Private sendCounters As List(Of PerformanceCounter)
+    Private baseSendBytes As Long
+    Private baseReceiveBytes As Long
     Private _tickSpan As Integer
     Private Property TickSpan As Integer
         Get
@@ -101,7 +101,7 @@ Public Class NetworkTrafficCounter
     Private disposedValue As Boolean ' 要检测冗余调用
 
     ' IDisposable
-    Protected Overridable Sub Dispose(disposing As Boolean)
+    Protected Sub Dispose(disposing As Boolean)
         If Not disposedValue Then
             If disposing Then
                 ' TODO: 释放托管状态(托管对象)。
