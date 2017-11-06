@@ -62,21 +62,21 @@ Public Interface IDeskBand2
     <PreserveSig> Function GetCompositionState(<Out, MarshalAs(UnmanagedType.Bool)> ByRef pfCompositionEnabled As Boolean) As HResult
 End Interface
 
-<ComImport>
-<InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
-<Guid("68284faa-6a48-11d0-8c78-00c04fd918b4")>
-Public Interface IInputObject
-    <PreserveSig> Function UIActivateIO(<MarshalAs(UnmanagedType.Bool)> fActivate As Boolean, ByRef msg As MSG) As HResult
-    <PreserveSig> Function HasFocusIO() As Int32
-    <PreserveSig> Function TranslateAcceleratorIO(ByRef msg As MSG) As HResult
-End Interface
+'<ComImport>
+'<InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
+'<Guid("68284faa-6a48-11d0-8c78-00c04fd918b4")>
+'Public Interface IInputObject
+'    <PreserveSig> Function UIActivateIO(<MarshalAs(UnmanagedType.Bool)> fActivate As Boolean, ByRef msg As MSG) As HResult
+'    <PreserveSig> Function HasFocusIO() As Int32
+'    <PreserveSig> Function TranslateAcceleratorIO(ByRef msg As MSG) As HResult
+'End Interface
 
-<ComImport>
-<InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
-<Guid("f1db8392-7331-11d0-8c99-00a0c92dbfe8")>
-Public Interface IInputObjectSite
-    <PreserveSig> Function OnFocusChangeIS(<[In]> punkObj As Object, fSetFocus As Int32) As HResult
-End Interface
+'<ComImport>
+'<InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
+'<Guid("f1db8392-7331-11d0-8c99-00a0c92dbfe8")>
+'Public Interface IInputObjectSite
+'    <PreserveSig> Function OnFocusChangeIS(<[In]> punkObj As Object, fSetFocus As Int32) As HResult
+'End Interface
 
 <ComImport>
 <InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
@@ -97,15 +97,15 @@ Public Interface IPersistStream
     <PreserveSig> Function GetSizeMax(<Out> ByRef pcbSize As UInt64) As HResult
 End Interface
 
-<SuppressUnmanagedCodeSecurity, ComImport, Guid("7FD52380-4E07-101B-AE2D-08002B2EC713"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
-Public Interface IPersistStreamInit
-    <PreserveSig> Function GetClassID(ByRef pClassID As Guid) As HResult
-    Function IsDirty() As Integer
-    <PreserveSig> Function Load(<[In], MarshalAs(UnmanagedType.[Interface])> pStm As IStream) As HResult
-    <PreserveSig> Function Save(<[In], MarshalAs(UnmanagedType.[Interface])> pStm As IStream, <[In]> fClearDirty As Boolean) As HResult
-    <PreserveSig> Function GetSizeMax(<Out> ByRef pcbSize As UInt64) As HResult
-    <PreserveSig> Function InitNew() As HResult
-End Interface
+'<SuppressUnmanagedCodeSecurity, ComImport, Guid("7FD52380-4E07-101B-AE2D-08002B2EC713"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)>
+'Public Interface IPersistStreamInit
+'    <PreserveSig> Function GetClassID(ByRef pClassID As Guid) As HResult
+'    Function IsDirty() As Integer
+'    <PreserveSig> Function Load(<[In], MarshalAs(UnmanagedType.[Interface])> pStm As IStream) As HResult
+'    <PreserveSig> Function Save(<[In], MarshalAs(UnmanagedType.[Interface])> pStm As IStream, <[In]> fClearDirty As Boolean) As HResult
+'    <PreserveSig> Function GetSizeMax(<Out> ByRef pcbSize As UInt64) As HResult
+'    <PreserveSig> Function InitNew() As HResult
+'End Interface
 
 ''' <summary>
 ''' 提供具有 ISequentialStream 功能的 IStream 接口的托管定义。
