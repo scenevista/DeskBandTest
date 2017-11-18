@@ -64,6 +64,13 @@ Public Class BandObject
         Hide()
         mCounter = New NetworkTrafficCounter()
         AddHandler mCounter.Tick, AddressOf CounterTick
+        AddHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
+    End Sub
+
+    Private Sub ShotdownHandler(sender As Object, e As Microsoft.Win32.SessionEndingEventArgs)
+        e.Cancel = False
+        SaveSettings()
+        RemoveHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
     End Sub
 
     Private Sub CounterTick(upSpeed As Long, downSpeed As Long)
@@ -76,18 +83,7 @@ Public Class BandObject
     End Sub
 
     Private Function GetSpeedString(speed As Long)
-        Select Case speed
-            Case Is < 1024
-                Return speed.ToString("0 B/s").PadLeft(12)
-            Case Is < 1048576
-                Return (speed / 1024).ToString("0.0 KB/s").PadLeft(12)
-            Case Is < 1073741824
-                Return (speed / 1048576).ToString("0.0 MB/s").PadLeft(12)
-            Case Is < 1099511627776
-                Return (speed / 1073741824).ToString("0.0 GB/s").PadLeft(12)
-            Case Else
-                Return (speed / 1099511627776).ToString("0.0 TB/s").PadLeft(12)
-        End Select
+        Return (GetDataSizeString(speed) & "/s").PadLeft(12)
     End Function
 
     Private Function GetDataSizeString(speed As Long) As String
@@ -416,6 +412,7 @@ Public Class BandObject
     End Sub
 
     Private Sub 关于ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles 关于ToolStripMenuItem.Click
+
         Dim f As New AboutBox
         f.Show()
     End Sub
