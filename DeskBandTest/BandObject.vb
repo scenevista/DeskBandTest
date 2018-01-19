@@ -47,9 +47,7 @@ Public Class BandObject
     Public Const ClassId As String = "29662d0a-3784-4737-8d05-6de97d9d0a4b"
     Public Const EventsId As String = "272c1cfa-5290-427f-98cb-33756d471171"
     Friend WithEvents LCapDn As Label
-    Friend WithEvents ContextMainMenu As ContextMenuStrip
     Private components As System.ComponentModel.IContainer
-    Friend WithEvents 关于ToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LUpSpeed As Label
     Friend WithEvents LDnSpeed As Label
     Friend WithEvents LCapUp As Label
@@ -289,14 +287,11 @@ Public Class BandObject
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.LCapDn = New System.Windows.Forms.Label()
-        Me.ContextMainMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.关于ToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LUpSpeed = New System.Windows.Forms.Label()
         Me.LDnSpeed = New System.Windows.Forms.Label()
         Me.LCapUp = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.ContextMainMenu.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -314,19 +309,6 @@ Public Class BandObject
         Me.LCapDn.TabIndex = 1
         Me.LCapDn.Text = "Dn"
         Me.LCapDn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'ContextMainMenu
-        '
-        Me.ContextMainMenu.ImageScalingSize = New System.Drawing.Size(24, 24)
-        Me.ContextMainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.关于ToolStripMenuItem})
-        Me.ContextMainMenu.Name = "ContextMenuStrip1"
-        Me.ContextMainMenu.Size = New System.Drawing.Size(117, 32)
-        '
-        '关于ToolStripMenuItem
-        '
-        Me.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem"
-        Me.关于ToolStripMenuItem.Size = New System.Drawing.Size(116, 28)
-        Me.关于ToolStripMenuItem.Text = "关于"
         '
         'LUpSpeed
         '
@@ -416,17 +398,12 @@ Public Class BandObject
         Me.MinimumSize = New System.Drawing.Size(100, 40)
         Me.Name = "BandObject"
         Me.Size = New System.Drawing.Size(100, 40)
-        Me.ContextMainMenu.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
 
-    Private Sub 关于ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles 关于ToolStripMenuItem.Click
-        Dim f As New AboutBox
-        f.Show()
-    End Sub
 
 End Class
 

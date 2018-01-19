@@ -20,17 +20,6 @@ Public Structure POINTL
 End Structure
 
 <StructLayout(LayoutKind.Sequential)>
-Public Structure MSG
-    Public hwnd As IntPtr
-    Public message As Integer
-    Public wParam As IntPtr
-    Public lParam As IntPtr
-    Public time As Integer
-    Public pt_x As Integer
-    Public pt_y As Integer
-End Structure
-
-<StructLayout(LayoutKind.Sequential)>
 Public Structure RECT
     Dim Left As Integer
     Dim Top As Integer
