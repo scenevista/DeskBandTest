@@ -334,7 +334,7 @@ Public Class BandObject
         Me.LUpSpeed.AutoSize = True
         Me.LUpSpeed.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
         Me.LUpSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LUpSpeed.Location = New System.Drawing.Point(80, 0)
+        Me.LUpSpeed.Location = New System.Drawing.Point(60, 0)
         Me.LUpSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LUpSpeed.Name = "LUpSpeed"
         Me.LUpSpeed.Size = New System.Drawing.Size(40, 20)
@@ -349,7 +349,7 @@ Public Class BandObject
         Me.LDnSpeed.AutoSize = True
         Me.LDnSpeed.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
         Me.LDnSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LDnSpeed.Location = New System.Drawing.Point(80, 20)
+        Me.LDnSpeed.Location = New System.Drawing.Point(60, 20)
         Me.LDnSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LDnSpeed.Name = "LDnSpeed"
         Me.LDnSpeed.Size = New System.Drawing.Size(40, 20)
@@ -391,7 +391,7 @@ Public Class BandObject
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(120, 40)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(100, 40)
         Me.TableLayoutPanel1.TabIndex = 4
         Me.ToolTip1.SetToolTip(Me.TableLayoutPanel1, "这是内容")
         '
@@ -413,9 +413,9 @@ Public Class BandObject
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.DoubleBuffered = True
         Me.Margin = New System.Windows.Forms.Padding(0)
-        Me.MinimumSize = New System.Drawing.Size(120, 40)
+        Me.MinimumSize = New System.Drawing.Size(100, 40)
         Me.Name = "BandObject"
-        Me.Size = New System.Drawing.Size(120, 40)
+        Me.Size = New System.Drawing.Size(100, 40)
         Me.ContextMainMenu.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
