@@ -1,4 +1,5 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.Drawing
+Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 Imports DeskBandTest
 
@@ -30,7 +31,10 @@ Public Class BandObject
     End Property
 #End Region
 #Region "Native Methods"
-    Declare Auto Function SetParent Lib "user32.dll" (ByVal hWndChild As IntPtr, ByVal hWndNewParent As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+    Private Declare Auto Function SetParent Lib "user32.dll" (ByVal hWndChild As IntPtr, ByVal hWndNewParent As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+    Private Declare Function MonitorFromWindow Lib "user32.dll" (hwnd As IntPtr, dwFlags As HMONITOR_OPTION) As IntPtr
+    Private Declare Function GetDesktopWindow Lib "user32.dll" () As IntPtr
+    Private Declare Function GetScaleFactorForMonitor Lib "Shcore.dll" (hMonitor As IntPtr, ByRef pScale As Integer) As HResult
 #End Region
 #Region "Const"
     Private ReadOnly CATID_DESKBAND As Guid = New Guid("00021492-0000-0000-C000-000000000046")
@@ -63,6 +67,18 @@ Public Class BandObject
         InitializeComponent()
         Hide()
         mCounter = New NetworkTrafficCounter()
+
+        '根据DPI缩放系数，适当调整界面大小
+        Dim scale As Integer = 0
+        GetScaleFactorForMonitor(MonitorFromWindow(Handle, 0), scale)
+        Width = CInt((scale / 100) * Width)
+        Height = CInt((scale / 100) * Height)
+        Dim nf As New Font(New FontFamily("Arial Narrow"), CSng(0.1F * (scale / 100)), GraphicsUnit.Inch)
+        LUpSpeed.Font = nf
+        LDnSpeed.Font = nf
+        LCapUp.Font = nf
+        LCapDn.Font = nf
+
         AddHandler mCounter.Tick, AddressOf CounterTick
         AddHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
     End Sub
@@ -154,8 +170,8 @@ Public Class BandObject
         pdbi.ptActual.x = Size.Width
         pdbi.ptActual.y = Size.Height
 
-        pdbi.ptMaxSize.x = -1
-        pdbi.ptMaxSize.y = -1
+        pdbi.ptMaxSize.x = Size.Width * 2
+        pdbi.ptMaxSize.y = Size.Height * 2
 
         pdbi.ptMinSize.x = Size.Width
         pdbi.ptMinSize.y = Size.Height
@@ -163,9 +179,9 @@ Public Class BandObject
         pdbi.ptIntegral.x = 1
         pdbi.ptIntegral.y = 1
 
-        pdbi.crBkgnd = Drawing.Color.FromArgb(0, 0, 0, 0).ToArgb
+        'pdbi.crBkgnd = Drawing.Color.FromArgb(0, 0, 0, 0).ToArgb
 
-        pdbi.dwModeFlags = pdbi.dwModeFlags Or DBIM.TITLE Or DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE Or DBIM.BKCOLOR
+        pdbi.dwModeFlags = pdbi.dwModeFlags Or DBIM.TITLE Or DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE 'Or DBIM.BKCOLOR
 
         Return HResult.S_OK
     End Function
@@ -289,38 +305,39 @@ Public Class BandObject
         Me.LCapDn.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapDn.AutoSize = True
         Me.LCapDn.BackColor = System.Drawing.Color.Transparent
-        Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
+        Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
         Me.LCapDn.ForeColor = System.Drawing.Color.AliceBlue
-        Me.LCapDn.Location = New System.Drawing.Point(0, 22)
+        Me.LCapDn.Location = New System.Drawing.Point(0, 20)
         Me.LCapDn.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapDn.Name = "LCapDn"
-        Me.LCapDn.Size = New System.Drawing.Size(20, 16)
+        Me.LCapDn.Size = New System.Drawing.Size(25, 20)
         Me.LCapDn.TabIndex = 1
         Me.LCapDn.Text = "Dn"
         Me.LCapDn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'ContextMainMenu
         '
+        Me.ContextMainMenu.ImageScalingSize = New System.Drawing.Size(24, 24)
         Me.ContextMainMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.关于ToolStripMenuItem})
         Me.ContextMainMenu.Name = "ContextMenuStrip1"
-        Me.ContextMainMenu.Size = New System.Drawing.Size(101, 26)
+        Me.ContextMainMenu.Size = New System.Drawing.Size(117, 32)
         '
         '关于ToolStripMenuItem
         '
         Me.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem"
-        Me.关于ToolStripMenuItem.Size = New System.Drawing.Size(100, 22)
+        Me.关于ToolStripMenuItem.Size = New System.Drawing.Size(116, 28)
         Me.关于ToolStripMenuItem.Text = "关于"
         '
         'LUpSpeed
         '
         Me.LUpSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LUpSpeed.AutoSize = True
-        Me.LUpSpeed.Font = New System.Drawing.Font("Segoe UI", 0.13!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch, CType(0, Byte))
+        Me.LUpSpeed.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
         Me.LUpSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LUpSpeed.Location = New System.Drawing.Point(63, 1)
+        Me.LUpSpeed.Location = New System.Drawing.Point(80, 0)
         Me.LUpSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LUpSpeed.Name = "LUpSpeed"
-        Me.LUpSpeed.Size = New System.Drawing.Size(37, 17)
+        Me.LUpSpeed.Size = New System.Drawing.Size(40, 20)
         Me.LUpSpeed.TabIndex = 2
         Me.LUpSpeed.Text = "0 B/s"
         Me.LUpSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -330,12 +347,12 @@ Public Class BandObject
         '
         Me.LDnSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LDnSpeed.AutoSize = True
-        Me.LDnSpeed.Font = New System.Drawing.Font("Segoe UI", 0.13!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
+        Me.LDnSpeed.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
         Me.LDnSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LDnSpeed.Location = New System.Drawing.Point(63, 21)
+        Me.LDnSpeed.Location = New System.Drawing.Point(80, 20)
         Me.LDnSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LDnSpeed.Name = "LDnSpeed"
-        Me.LDnSpeed.Size = New System.Drawing.Size(37, 17)
+        Me.LDnSpeed.Size = New System.Drawing.Size(40, 20)
         Me.LDnSpeed.TabIndex = 3
         Me.LDnSpeed.Text = "0 B/s"
         Me.LDnSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -346,19 +363,18 @@ Public Class BandObject
         Me.LCapUp.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapUp.AutoSize = True
         Me.LCapUp.BackColor = System.Drawing.Color.Transparent
-        Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
         Me.LCapUp.ForeColor = System.Drawing.Color.AliceBlue
-        Me.LCapUp.Location = New System.Drawing.Point(0, 2)
+        Me.LCapUp.Location = New System.Drawing.Point(0, 0)
         Me.LCapUp.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapUp.Name = "LCapUp"
-        Me.LCapUp.Size = New System.Drawing.Size(21, 16)
+        Me.LCapUp.Size = New System.Drawing.Size(26, 20)
         Me.LCapUp.TabIndex = 0
         Me.LCapUp.Text = "Up"
         Me.LCapUp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TableLayoutPanel1
         '
-        Me.TableLayoutPanel1.AutoSize = True
         Me.TableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanel1.ColumnCount = 2
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
@@ -375,7 +391,7 @@ Public Class BandObject
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(100, 40)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(120, 40)
         Me.TableLayoutPanel1.TabIndex = 4
         Me.ToolTip1.SetToolTip(Me.TableLayoutPanel1, "这是内容")
         '
@@ -393,26 +409,21 @@ Public Class BandObject
         '
         'BandObject
         '
-        Me.AutoSize = True
-        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.Black
-        Me.ContextMenuStrip = Me.ContextMainMenu
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.DoubleBuffered = True
         Me.Margin = New System.Windows.Forms.Padding(0)
-        Me.MinimumSize = New System.Drawing.Size(100, 40)
+        Me.MinimumSize = New System.Drawing.Size(120, 40)
         Me.Name = "BandObject"
-        Me.Size = New System.Drawing.Size(100, 40)
+        Me.Size = New System.Drawing.Size(120, 40)
         Me.ContextMainMenu.ResumeLayout(False)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
     Private Sub 关于ToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles 关于ToolStripMenuItem.Click
-
         Dim f As New AboutBox
         f.Show()
     End Sub
