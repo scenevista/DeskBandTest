@@ -404,7 +404,16 @@ Public Class BandObject
 
     End Sub
 
+    Private Sub BandObject_DoubleClick(sender As Object, e As EventArgs) Handles MyBase.DoubleClick, LCapUp.DoubleClick, LCapDn.DoubleClick, LUpSpeed.DoubleClick, LDnSpeed.DoubleClick
+        Dim info As New NetworkBandwidthDetial() With {
+            .SessionDownloadBytes = mCounter.ReceivedBytes,
+            .SessionUploadBytes = mCounter.SentBytes,
+            .TotalDownloadBytes = TotalBytesDown,
+            .TotalUploadBytes = TotalBytesUp}
 
+        Dim f As New DetailsDialog(info)
+        f.Show()
+    End Sub
 End Class
 
 

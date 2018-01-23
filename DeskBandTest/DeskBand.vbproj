@@ -84,6 +84,12 @@
     <Compile Include="BandObject.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="DetailsDialog.Designer.vb">
+      <DependentUpon>DetailsDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Interfaces.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -101,12 +107,16 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Enums.vb" />
+    <Compile Include="NetworkBandwidthDetial.vb" />
     <Compile Include="NetworkTrafficCounter.vb" />
     <Compile Include="Structures.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BandObject.resx">
       <DependentUpon>BandObject.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DetailsDialog.resx">
+      <DependentUpon>DetailsDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -129,8 +139,8 @@
     <None Include="StrongNameKey.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\ScreenShot.PNG" />
-    <Content Include="Images\UIDesigner.PNG" />
+    <None Include="Images\ScreenShot.PNG" />
+    <None Include="Images\UIDesigner.PNG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
