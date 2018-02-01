@@ -71,11 +71,11 @@ Public Class BandObject
         GetScaleFactorForMonitor(MonitorFromWindow(Handle, 0), scale)
         Width = CInt((scale / 100) * Width)
         Height = CInt((scale / 100) * Height)
-        Dim nf As New Font(New FontFamily("Arial Narrow"), CSng(0.1F * (scale / 100)), GraphicsUnit.Inch)
-        LUpSpeed.Font = nf
-        LDnSpeed.Font = nf
-        LCapUp.Font = nf
-        LCapDn.Font = nf
+        'Dim nf As New Font(New FontFamily("Arial Narrow"), CSng(0.1F * (scale / 100)), GraphicsUnit.Inch)
+        'LUpSpeed.Font = nf
+        'LDnSpeed.Font = nf
+        'LCapUp.Font = nf
+        'LCapDn.Font = nf
 
         AddHandler mCounter.Tick, AddressOf CounterTick
         AddHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
@@ -300,12 +300,12 @@ Public Class BandObject
         Me.LCapDn.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapDn.AutoSize = True
         Me.LCapDn.BackColor = System.Drawing.Color.Transparent
-        Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
+        Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
         Me.LCapDn.ForeColor = System.Drawing.Color.AliceBlue
-        Me.LCapDn.Location = New System.Drawing.Point(0, 20)
+        Me.LCapDn.Location = New System.Drawing.Point(0, 22)
         Me.LCapDn.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapDn.Name = "LCapDn"
-        Me.LCapDn.Size = New System.Drawing.Size(25, 20)
+        Me.LCapDn.Size = New System.Drawing.Size(20, 16)
         Me.LCapDn.TabIndex = 1
         Me.LCapDn.Text = "Dn"
         Me.LCapDn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -314,12 +314,12 @@ Public Class BandObject
         '
         Me.LUpSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LUpSpeed.AutoSize = True
-        Me.LUpSpeed.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
+        Me.LUpSpeed.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
         Me.LUpSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LUpSpeed.Location = New System.Drawing.Point(60, 0)
+        Me.LUpSpeed.Location = New System.Drawing.Point(69, 2)
         Me.LUpSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LUpSpeed.Name = "LUpSpeed"
-        Me.LUpSpeed.Size = New System.Drawing.Size(40, 20)
+        Me.LUpSpeed.Size = New System.Drawing.Size(31, 16)
         Me.LUpSpeed.TabIndex = 2
         Me.LUpSpeed.Text = "0 B/s"
         Me.LUpSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -329,12 +329,12 @@ Public Class BandObject
         '
         Me.LDnSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LDnSpeed.AutoSize = True
-        Me.LDnSpeed.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
+        Me.LDnSpeed.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
         Me.LDnSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LDnSpeed.Location = New System.Drawing.Point(60, 20)
+        Me.LDnSpeed.Location = New System.Drawing.Point(69, 22)
         Me.LDnSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LDnSpeed.Name = "LDnSpeed"
-        Me.LDnSpeed.Size = New System.Drawing.Size(40, 20)
+        Me.LDnSpeed.Size = New System.Drawing.Size(31, 16)
         Me.LDnSpeed.TabIndex = 3
         Me.LDnSpeed.Text = "0 B/s"
         Me.LDnSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -345,12 +345,12 @@ Public Class BandObject
         Me.LCapUp.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapUp.AutoSize = True
         Me.LCapUp.BackColor = System.Drawing.Color.Transparent
-        Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 0.11!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Inch)
+        Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
         Me.LCapUp.ForeColor = System.Drawing.Color.AliceBlue
-        Me.LCapUp.Location = New System.Drawing.Point(0, 0)
+        Me.LCapUp.Location = New System.Drawing.Point(0, 2)
         Me.LCapUp.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapUp.Name = "LCapUp"
-        Me.LCapUp.Size = New System.Drawing.Size(26, 20)
+        Me.LCapUp.Size = New System.Drawing.Size(21, 16)
         Me.LCapUp.TabIndex = 0
         Me.LCapUp.Text = "Up"
         Me.LCapUp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
