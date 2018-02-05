@@ -45,15 +45,14 @@ Public Class BandObject
     ' 及其 COM 接口。若更改它们，则现有的
     ' 客户端将不再能访问此类。
     Public Const ClassId As String = "29662d0a-3784-4737-8d05-6de97d9d0a4b"
-    Public Const EventsId As String = "272c1cfa-5290-427f-98cb-33756d471171"
+    'Public Const EventsId As String = "272c1cfa-5290-427f-98cb-33756d471171"
     Friend WithEvents LCapDn As Label
     Private components As System.ComponentModel.IContainer
     Friend WithEvents LUpSpeed As Label
     Friend WithEvents LDnSpeed As Label
     Friend WithEvents LCapUp As Label
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents ToolTip1 As ToolTip
-    Public Const InterfaceId As String = "2bfa76a6-67b3-4798-8b58-73034782da1d"
+    'Public Const InterfaceId As String = "2bfa76a6-67b3-4798-8b58-73034782da1d"
 #End Region
 
     ' 可创建的 COM 类必须具有一个不带参数的 Public Sub New() 
@@ -71,11 +70,6 @@ Public Class BandObject
         GetScaleFactorForMonitor(MonitorFromWindow(Handle, 0), scale)
         Width = CInt((scale / 100) * Width)
         Height = CInt((scale / 100) * Height)
-        'Dim nf As New Font(New FontFamily("Arial Narrow"), CSng(0.1F * (scale / 100)), GraphicsUnit.Inch)
-        'LUpSpeed.Font = nf
-        'LDnSpeed.Font = nf
-        'LCapUp.Font = nf
-        'LCapDn.Font = nf
 
         AddHandler mCounter.Tick, AddressOf CounterTick
         AddHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
@@ -91,9 +85,12 @@ Public Class BandObject
         LUpSpeed.Text = GetSpeedString(upSpeed)
         LDnSpeed.Text = GetSpeedString(downSpeed)
 
-        ToolTip1.SetToolTip(LUpSpeed, GetTooltipString)
-        ToolTip1.SetToolTip(LDnSpeed, GetTooltipString)
-        ToolTip1.SetToolTip(TableLayoutPanel1, GetTooltipString)
+        'Static tipString As String
+        'tipString = GetTooltipString()
+
+        'ToolTip1.SetToolTip(LUpSpeed, tipString)
+        'ToolTip1.SetToolTip(LDnSpeed, tipString)
+        'ToolTip1.SetToolTip(TableLayoutPanel1, tipString)
     End Sub
 
     Private Function GetSpeedString(speed As Long)
@@ -126,10 +123,10 @@ Public Class BandObject
         My.Settings.Save()
     End Sub
 
-    Private Function GetTooltipString() As String
-        'Return $"Network Traffic    Uploaded:{...}     Downloaded:{...}"
-        Return $"流量统计   上传：{GetDataSizeString(TotalBytesUp).PadLeft(9)}    下载：{GetDataSizeString(TotalBytesDown).PadLeft(9)}"
-    End Function
+    'Private Function GetTooltipString() As String
+    '    'Return $"Network Traffic    Uploaded:{...}     Downloaded:{...}"
+    '    Return $"流量统计   上传：{GetDataSizeString(TotalBytesUp).PadLeft(9)}    下载：{GetDataSizeString(TotalBytesDown).PadLeft(9)}"
+    'End Function
 #Region "IDeskBand2"
 
     Public Function GetWindow(ByRef phwnd As IntPtr) As HResult Implements IOleWindow.GetWindow, IDockingWindow.GetWindow, IDeskBand.GetWindow, IDeskBand2.GetWindow
@@ -285,13 +282,11 @@ Public Class BandObject
 #End Region
 
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Me.LCapDn = New System.Windows.Forms.Label()
         Me.LUpSpeed = New System.Windows.Forms.Label()
         Me.LDnSpeed = New System.Windows.Forms.Label()
         Me.LCapUp = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -300,12 +295,12 @@ Public Class BandObject
         Me.LCapDn.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapDn.AutoSize = True
         Me.LCapDn.BackColor = System.Drawing.Color.Transparent
-        Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
+        Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 9.0!, System.Drawing.FontStyle.Bold)
         Me.LCapDn.ForeColor = System.Drawing.Color.AliceBlue
         Me.LCapDn.Location = New System.Drawing.Point(0, 22)
         Me.LCapDn.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapDn.Name = "LCapDn"
-        Me.LCapDn.Size = New System.Drawing.Size(20, 16)
+        Me.LCapDn.Size = New System.Drawing.Size(21, 16)
         Me.LCapDn.TabIndex = 1
         Me.LCapDn.Text = "Dn"
         Me.LCapDn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -316,7 +311,7 @@ Public Class BandObject
         Me.LUpSpeed.AutoSize = True
         Me.LUpSpeed.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
         Me.LUpSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LUpSpeed.Location = New System.Drawing.Point(69, 2)
+        Me.LUpSpeed.Location = New System.Drawing.Point(59, 2)
         Me.LUpSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LUpSpeed.Name = "LUpSpeed"
         Me.LUpSpeed.Size = New System.Drawing.Size(31, 16)
@@ -331,7 +326,7 @@ Public Class BandObject
         Me.LDnSpeed.AutoSize = True
         Me.LDnSpeed.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
         Me.LDnSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LDnSpeed.Location = New System.Drawing.Point(69, 22)
+        Me.LDnSpeed.Location = New System.Drawing.Point(59, 22)
         Me.LDnSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LDnSpeed.Name = "LDnSpeed"
         Me.LDnSpeed.Size = New System.Drawing.Size(31, 16)
@@ -345,7 +340,7 @@ Public Class BandObject
         Me.LCapUp.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapUp.AutoSize = True
         Me.LCapUp.BackColor = System.Drawing.Color.Transparent
-        Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
+        Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 9.0!, System.Drawing.FontStyle.Bold)
         Me.LCapUp.ForeColor = System.Drawing.Color.AliceBlue
         Me.LCapUp.Location = New System.Drawing.Point(0, 2)
         Me.LCapUp.Margin = New System.Windows.Forms.Padding(0)
@@ -357,7 +352,6 @@ Public Class BandObject
         '
         'TableLayoutPanel1
         '
-        Me.TableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.TableLayoutPanel1.ColumnCount = 2
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle())
@@ -368,26 +362,13 @@ Public Class BandObject
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(0)
-        Me.TableLayoutPanel1.MinimumSize = New System.Drawing.Size(100, 40)
+        Me.TableLayoutPanel1.MinimumSize = New System.Drawing.Size(90, 40)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(100, 40)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(90, 40)
         Me.TableLayoutPanel1.TabIndex = 4
-        Me.ToolTip1.SetToolTip(Me.TableLayoutPanel1, "这是内容")
-        '
-        'ToolTip1
-        '
-        Me.ToolTip1.AutoPopDelay = 5000
-        Me.ToolTip1.InitialDelay = 500
-        Me.ToolTip1.IsBalloon = True
-        Me.ToolTip1.ReshowDelay = 0
-        Me.ToolTip1.ShowAlways = True
-        Me.ToolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info
-        Me.ToolTip1.ToolTipTitle = "网速监控"
-        Me.ToolTip1.UseAnimation = False
-        Me.ToolTip1.UseFading = False
         '
         'BandObject
         '
@@ -395,9 +376,9 @@ Public Class BandObject
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.DoubleBuffered = True
         Me.Margin = New System.Windows.Forms.Padding(0)
-        Me.MinimumSize = New System.Drawing.Size(100, 40)
+        Me.MinimumSize = New System.Drawing.Size(90, 40)
         Me.Name = "BandObject"
-        Me.Size = New System.Drawing.Size(100, 40)
+        Me.Size = New System.Drawing.Size(90, 40)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)

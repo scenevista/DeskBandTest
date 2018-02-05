@@ -6,11 +6,11 @@ Friend NotInheritable Class NetworkTrafficCounter
 
     Public Sub New()
         timer = New Timer(New TimerCallback(AddressOf TimerCallback))
+        TickSpan = 1000
         receiveCounters = New List(Of PerformanceCounter)
         sendCounters = New List(Of PerformanceCounter)
         InitializeBaseCounters()
         RefreshCounters()
-        TickSpan = 1000
     End Sub
 
     Public Event Tick(ByVal upSpeed As Long, ByVal downSpeed As Long)
