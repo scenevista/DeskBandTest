@@ -22,6 +22,7 @@ Friend NotInheritable Class NetworkTrafficCounter
     Private baseSendBytes As Long
     Private baseReceiveBytes As Long
     Private _tickSpan As Integer
+
     Private Property TickSpan As Integer
         Get
             Return _tickSpan
@@ -65,7 +66,7 @@ Friend NotInheritable Class NetworkTrafficCounter
         RaiseEvent Tick(snd, rec)
     End Sub
 
-    Private Sub RefreshCounters()
+    Public Sub RefreshCounters()
         '清理所有计数器
         For Each counter As PerformanceCounter In sendCounters
             counter.Close()
@@ -86,7 +87,7 @@ Friend NotInheritable Class NetworkTrafficCounter
 
     End Sub
 
-    Public Sub InitializeBaseCounters()
+    Private Sub InitializeBaseCounters()
         Dim interfaces() As NetworkInterface = NetworkInterface.GetAllNetworkInterfaces()
         Dim rec As Long = 0, snd As Long = 0
         For Each inf As NetworkInterface In interfaces

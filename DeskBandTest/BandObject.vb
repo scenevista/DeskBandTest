@@ -73,24 +73,26 @@ Public Class BandObject
 
         AddHandler mCounter.Tick, AddressOf CounterTick
         AddHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
+        AddHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
+    End Sub
+
+    Private Sub NetworkAvailbilityChangedHandler(sender As Object, e As Net.NetworkInformation.NetworkAvailabilityEventArgs)
+        SaveSettings()
+        mCounter.RefreshCounters()
     End Sub
 
     Private Sub ShotdownHandler(sender As Object, e As Microsoft.Win32.SessionEndingEventArgs)
         e.Cancel = False
         SaveSettings()
+
+        RemoveHandler mCounter.Tick, AddressOf CounterTick
         RemoveHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
+        RemoveHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
     End Sub
 
     Private Sub CounterTick(upSpeed As Long, downSpeed As Long)
         LUpSpeed.Text = GetSpeedString(upSpeed)
         LDnSpeed.Text = GetSpeedString(downSpeed)
-
-        'Static tipString As String
-        'tipString = GetTooltipString()
-
-        'ToolTip1.SetToolTip(LUpSpeed, tipString)
-        'ToolTip1.SetToolTip(LDnSpeed, tipString)
-        'ToolTip1.SetToolTip(TableLayoutPanel1, tipString)
     End Sub
 
     Private Function GetSpeedString(speed As Long)

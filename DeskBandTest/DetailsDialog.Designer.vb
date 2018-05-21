@@ -51,24 +51,26 @@ Partial Class DetailsDialog
         Me.TableLayoutPanel1.Controls.Add(Me.btn_close, 1, 5)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel1.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 6
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80.0!))
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 53.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(618, 424)
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 67.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(416, 294)
         Me.TableLayoutPanel1.TabIndex = 0
         '
         'Label1
         '
         Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(114, 101)
+        Me.Label1.Location = New System.Drawing.Point(77, 68)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(80, 18)
+        Me.Label1.Size = New System.Drawing.Size(53, 12)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "累计上传"
         '
@@ -76,9 +78,10 @@ Partial Class DetailsDialog
         '
         Me.LabelTotalUpload.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LabelTotalUpload.AutoSize = True
-        Me.LabelTotalUpload.Location = New System.Drawing.Point(312, 101)
+        Me.LabelTotalUpload.Location = New System.Drawing.Point(210, 68)
+        Me.LabelTotalUpload.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LabelTotalUpload.Name = "LabelTotalUpload"
-        Me.LabelTotalUpload.Size = New System.Drawing.Size(152, 18)
+        Me.LabelTotalUpload.Size = New System.Drawing.Size(101, 12)
         Me.LabelTotalUpload.TabIndex = 1
         Me.LabelTotalUpload.Text = "LabelTotalUpload"
         '
@@ -86,9 +89,10 @@ Partial Class DetailsDialog
         '
         Me.Label3.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(114, 162)
+        Me.Label3.Location = New System.Drawing.Point(77, 111)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(80, 18)
+        Me.Label3.Size = New System.Drawing.Size(53, 12)
         Me.Label3.TabIndex = 2
         Me.Label3.Text = "累计下载"
         '
@@ -96,9 +100,10 @@ Partial Class DetailsDialog
         '
         Me.LabelTotalDownload.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LabelTotalDownload.AutoSize = True
-        Me.LabelTotalDownload.Location = New System.Drawing.Point(312, 162)
+        Me.LabelTotalDownload.Location = New System.Drawing.Point(210, 111)
+        Me.LabelTotalDownload.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LabelTotalDownload.Name = "LabelTotalDownload"
-        Me.LabelTotalDownload.Size = New System.Drawing.Size(170, 18)
+        Me.LabelTotalDownload.Size = New System.Drawing.Size(113, 12)
         Me.LabelTotalDownload.TabIndex = 3
         Me.LabelTotalDownload.Text = "LabelTotalDownload"
         '
@@ -106,9 +111,10 @@ Partial Class DetailsDialog
         '
         Me.Label5.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(114, 223)
+        Me.Label5.Location = New System.Drawing.Point(77, 154)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(80, 18)
+        Me.Label5.Size = New System.Drawing.Size(53, 12)
         Me.Label5.TabIndex = 4
         Me.Label5.Text = "本次上传"
         '
@@ -116,9 +122,10 @@ Partial Class DetailsDialog
         '
         Me.LabelSessionUpload.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LabelSessionUpload.AutoSize = True
-        Me.LabelSessionUpload.Location = New System.Drawing.Point(312, 223)
+        Me.LabelSessionUpload.Location = New System.Drawing.Point(210, 154)
+        Me.LabelSessionUpload.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LabelSessionUpload.Name = "LabelSessionUpload"
-        Me.LabelSessionUpload.Size = New System.Drawing.Size(170, 18)
+        Me.LabelSessionUpload.Size = New System.Drawing.Size(113, 12)
         Me.LabelSessionUpload.TabIndex = 5
         Me.LabelSessionUpload.Text = "LabelSessionUpload"
         '
@@ -126,9 +133,10 @@ Partial Class DetailsDialog
         '
         Me.Label7.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(114, 284)
+        Me.Label7.Location = New System.Drawing.Point(77, 197)
+        Me.Label7.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(80, 18)
+        Me.Label7.Size = New System.Drawing.Size(53, 12)
         Me.Label7.TabIndex = 6
         Me.Label7.Text = "本次下载"
         '
@@ -136,9 +144,10 @@ Partial Class DetailsDialog
         '
         Me.LabelSessionDownload.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LabelSessionDownload.AutoSize = True
-        Me.LabelSessionDownload.Location = New System.Drawing.Point(312, 284)
+        Me.LabelSessionDownload.Location = New System.Drawing.Point(210, 197)
+        Me.LabelSessionDownload.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.LabelSessionDownload.Name = "LabelSessionDownload"
-        Me.LabelSessionDownload.Size = New System.Drawing.Size(188, 18)
+        Me.LabelSessionDownload.Size = New System.Drawing.Size(125, 12)
         Me.LabelSessionDownload.TabIndex = 7
         Me.LabelSessionDownload.Text = "LabelSessionDownload"
         '
@@ -146,22 +155,24 @@ Partial Class DetailsDialog
         '
         Me.btn_close.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.btn_close.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btn_close.Location = New System.Drawing.Point(403, 350)
+        Me.btn_close.Location = New System.Drawing.Point(272, 243)
+        Me.btn_close.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.Size = New System.Drawing.Size(120, 48)
+        Me.btn_close.Size = New System.Drawing.Size(80, 32)
         Me.btn_close.TabIndex = 8
-        Me.btn_close.Text = "确定"
+        Me.btn_close.Text = "关闭"
         Me.btn_close.UseVisualStyleBackColor = True
         '
         'DetailsDialog
         '
         Me.AcceptButton = Me.btn_close
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 18.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(618, 424)
+        Me.ClientSize = New System.Drawing.Size(416, 294)
         Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.MaximumSize = New System.Drawing.Size(640, 480)
-        Me.MinimumSize = New System.Drawing.Size(640, 480)
+        Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.MaximumSize = New System.Drawing.Size(432, 333)
+        Me.MinimumSize = New System.Drawing.Size(432, 333)
         Me.Name = "DetailsDialog"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "详细信息"
