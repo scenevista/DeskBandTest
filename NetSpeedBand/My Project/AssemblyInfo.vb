@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 '查看程序集特性的值
 
-<Assembly: AssemblyTitle("DeskBandTest")>
+<Assembly: AssemblyTitle("NetSpeedBand")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
-<Assembly: AssemblyProduct("DeskBandTest")>
-<Assembly: AssemblyCopyright("Copyright ©  2017")>
+<Assembly: AssemblyCompany("HP Inc.")>
+<Assembly: AssemblyProduct("NetSpeedBand")>
+<Assembly: AssemblyCopyright("Copyright © HP Inc. 2018")>
 <Assembly: AssemblyTrademark("")>
 
-<Assembly: ComVisible(True)>
+<Assembly: ComVisible(False)>
 
 '如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-<Assembly: Guid("5435271b-4cea-49f4-915a-56660e3e2b61")>
+<Assembly: Guid("d1923110-0776-493a-849a-c1e477f1b860")>
 
 ' 程序集的版本信息由下列四个值组成: 
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' 方法是按如下所示使用“*”: :
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.2.2.0")>
-<Assembly: AssemblyFileVersion("1.2.2.0")>
+<Assembly: AssemblyVersion("1.0.0.0")>
+<Assembly: AssemblyFileVersion("1.0.0.0")>

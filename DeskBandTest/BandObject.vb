@@ -72,7 +72,7 @@ Public Class BandObject
         Height = CInt((scale / 100) * Height)
 
         AddHandler mCounter.Tick, AddressOf CounterTick
-        AddHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
+        AddHandler Microsoft.Win32.SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
         AddHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
     End Sub
 
@@ -81,12 +81,11 @@ Public Class BandObject
         mCounter.RefreshCounters()
     End Sub
 
-    Private Sub ShotdownHandler(sender As Object, e As Microsoft.Win32.SessionEndingEventArgs)
-        e.Cancel = False
+    Private Sub ShotdownHandler(sender As Object, e As EventArgs)
         SaveSettings()
 
         RemoveHandler mCounter.Tick, AddressOf CounterTick
-        RemoveHandler Microsoft.Win32.SystemEvents.SessionEnding, AddressOf ShotdownHandler
+        RemoveHandler Microsoft.Win32.SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
         RemoveHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
     End Sub
 
@@ -95,7 +94,7 @@ Public Class BandObject
         LDnSpeed.Text = GetSpeedString(downSpeed)
     End Sub
 
-    Private Function GetSpeedString(speed As Long)
+    Private Function GetSpeedString(speed As Long) As String
         Return (GetDataSizeString(speed) & "/s").PadLeft(12)
     End Function
 
@@ -311,14 +310,14 @@ Public Class BandObject
         '
         Me.LUpSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LUpSpeed.AutoSize = True
-        Me.LUpSpeed.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
+        Me.LUpSpeed.Font = New System.Drawing.Font("新宋体", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
         Me.LUpSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LUpSpeed.Location = New System.Drawing.Point(59, 2)
+        Me.LUpSpeed.Location = New System.Drawing.Point(21, 4)
         Me.LUpSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LUpSpeed.Name = "LUpSpeed"
-        Me.LUpSpeed.Size = New System.Drawing.Size(31, 16)
+        Me.LUpSpeed.Size = New System.Drawing.Size(71, 12)
         Me.LUpSpeed.TabIndex = 2
-        Me.LUpSpeed.Text = "0 B/s"
+        Me.LUpSpeed.Text = "00.000 KB/s"
         Me.LUpSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.LUpSpeed.UseMnemonic = False
         '
@@ -326,14 +325,14 @@ Public Class BandObject
         '
         Me.LDnSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LDnSpeed.AutoSize = True
-        Me.LDnSpeed.Font = New System.Drawing.Font("Arial Narrow", 9.0!)
+        Me.LDnSpeed.Font = New System.Drawing.Font("新宋体", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
         Me.LDnSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LDnSpeed.Location = New System.Drawing.Point(59, 22)
+        Me.LDnSpeed.Location = New System.Drawing.Point(21, 24)
         Me.LDnSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LDnSpeed.Name = "LDnSpeed"
-        Me.LDnSpeed.Size = New System.Drawing.Size(31, 16)
+        Me.LDnSpeed.Size = New System.Drawing.Size(71, 12)
         Me.LDnSpeed.TabIndex = 3
-        Me.LDnSpeed.Text = "0 B/s"
+        Me.LDnSpeed.Text = "000.00 MB/s"
         Me.LDnSpeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.LDnSpeed.UseMnemonic = False
         '
