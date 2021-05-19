@@ -1,7 +1,9 @@
 ﻿Imports System.Drawing
+Imports System.IO
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
 Imports DeskBandTest
+Imports Microsoft.Win32
 
 <ComVisible(True), Guid(BandObject.ClassId)>
 Public Class BandObject
@@ -17,6 +19,10 @@ Public Class BandObject
     Private mSettings As New Settings
     Private mSettingsChanged As Boolean = False
     Private mCounter As NetworkTrafficCounter
+
+    Private flog As FileStream
+    Private wlog As StreamWriter
+
 
 #Region "Properties"
     Public ReadOnly Property TotalBytesDown As Long
@@ -65,14 +71,17 @@ Public Class BandObject
         Hide()
         mCounter = New NetworkTrafficCounter()
 
-        '根据DPI缩放系数，适当调整界面大小
-        Dim scale As Integer = 0
-        GetScaleFactorForMonitor(MonitorFromWindow(Handle, 0), scale)
-        Width = CInt((scale / 100) * Width)
-        Height = CInt((scale / 100) * Height)
+        ''根据DPI缩放系数，适当调整界面大小
+        'Dim scale As Integer = 0
+        'GetScaleFactorForMonitor(MonitorFromWindow(Handle, 0), scale)
+        'Width = CInt((scale / 100) * Width)
+        'Height = CInt((scale / 100) * Height)
+        flog = New FileStream("D:\dblog.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read)
+        wlog = New StreamWriter(flog)
+        wlog.WriteLine($"时间,事件,lparam,wparam,宽度")
 
         AddHandler mCounter.Tick, AddressOf CounterTick
-        AddHandler Microsoft.Win32.SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
+        AddHandler SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
         AddHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
     End Sub
 
@@ -85,7 +94,7 @@ Public Class BandObject
         SaveSettings()
 
         RemoveHandler mCounter.Tick, AddressOf CounterTick
-        RemoveHandler Microsoft.Win32.SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
+        RemoveHandler SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
         RemoveHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
     End Sub
 
@@ -119,6 +128,7 @@ Public Class BandObject
     End Sub
 
     Private Sub SaveSettings()
+        Return '以后再尝试其他的保存设置的方法
         My.Settings.UpBytes = TotalBytesUp
         My.Settings.DnBytes = TotalBytesDown
         My.Settings.Save()
@@ -157,6 +167,8 @@ Public Class BandObject
     End Function
 
     Public Function ResizeBorderDW(ByRef prcBorder As RECT, <[In]> <MarshalAs(UnmanagedType.IUnknown)> punkToolbarSite As Object, fReserved As Boolean) As HResult Implements IDockingWindow.ResizeBorderDW, IDeskBand.ResizeBorderDW, IDeskBand2.ResizeBorderDW
+
+        'Width = prcBorder.Right - prcBorder.Left
         Return HResult.E_NOTIMPL
     End Function
 
@@ -166,18 +178,23 @@ Public Class BandObject
         pdbi.ptActual.x = Size.Width
         pdbi.ptActual.y = Size.Height
 
-        pdbi.ptMaxSize.x = Size.Width * 2
-        pdbi.ptMaxSize.y = Size.Height * 2
+        pdbi.ptMaxSize.x = Size.Width
+        pdbi.ptMaxSize.y = Size.Height
 
         pdbi.ptMinSize.x = Size.Width
         pdbi.ptMinSize.y = Size.Height
 
-        pdbi.ptIntegral.x = 1
-        pdbi.ptIntegral.y = 1
+        pdbi.ptIntegral.x = 0
+        pdbi.ptIntegral.y = 0
+
+        'pdbi.wszTitle = "呵呵"
+
+
+        pdbi.dwMask = DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE Or DBIM.MODEFLAGS Or DBIM.INTEGRAL 'Or pdbi.dwMask Or DBIM.TITLE
 
         'pdbi.crBkgnd = Drawing.Color.FromArgb(0, 0, 0, 0).ToArgb
 
-        pdbi.dwModeFlags = pdbi.dwModeFlags Or DBIM.TITLE Or DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE 'Or DBIM.BKCOLOR
+        pdbi.dwModeFlags = pdbi.dwModeFlags Or DBIMF.FIXED 'Or DBIM.BKCOLOR
 
         Return HResult.S_OK
     End Function
@@ -212,11 +229,18 @@ Public Class BandObject
         End If
 
         If pUnkSite Is Nothing Then
-            SaveSettings()
-            parentWindowHandle = IntPtr.Zero
-            mCounter.Dispose()
-            Dispose(True)
-            GC.Collect()
+            Try
+                SaveSettings()
+                parentWindowHandle = IntPtr.Zero
+                mCounter.Dispose()
+                Dispose(True)
+                wlog.Close()
+                flog.Close()
+                GC.Collect()
+            Catch ex As Exception
+
+            End Try
+
         Else
             Try
                 pUnkSite.GetWindow(parentWindowHandle)
@@ -262,8 +286,8 @@ Public Class BandObject
     <ComRegisterFunction> <Security.SuppressUnmanagedCodeSecurity> Public Shared Sub ClassRegister(t As Type)
 
         Dim guid As String = t.GUID.ToString("B")
-        Dim rkClass = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).CreateSubKey(guid, True)
-        Dim rkCat = rkClass.CreateSubKey("Implemented Categories", True)
+        Dim rkClass As RegistryKey = My.Computer.Registry.ClassesRoot.OpenSubKey("CLSID", True).CreateSubKey(guid, True)
+        Dim rkCat As RegistryKey = rkClass.CreateSubKey("Implemented Categories", True)
         rkClass.Flush()
         rkClass.SetValue(Nothing, Title)
         rkClass.SetValue("MenuText", Title)
@@ -297,7 +321,7 @@ Public Class BandObject
         Me.LCapDn.AutoSize = True
         Me.LCapDn.BackColor = System.Drawing.Color.Transparent
         Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.LCapDn.ForeColor = System.Drawing.Color.AliceBlue
+        Me.LCapDn.ForeColor = System.Drawing.Color.SteelBlue
         Me.LCapDn.Location = New System.Drawing.Point(0, 22)
         Me.LCapDn.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapDn.Name = "LCapDn"
@@ -311,8 +335,8 @@ Public Class BandObject
         Me.LUpSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LUpSpeed.AutoSize = True
         Me.LUpSpeed.Font = New System.Drawing.Font("新宋体", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
-        Me.LUpSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LUpSpeed.Location = New System.Drawing.Point(21, 4)
+        Me.LUpSpeed.ForeColor = System.Drawing.Color.SteelBlue
+        Me.LUpSpeed.Location = New System.Drawing.Point(29, 4)
         Me.LUpSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LUpSpeed.Name = "LUpSpeed"
         Me.LUpSpeed.Size = New System.Drawing.Size(71, 12)
@@ -326,8 +350,8 @@ Public Class BandObject
         Me.LDnSpeed.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.LDnSpeed.AutoSize = True
         Me.LDnSpeed.Font = New System.Drawing.Font("新宋体", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(134, Byte))
-        Me.LDnSpeed.ForeColor = System.Drawing.SystemColors.HighlightText
-        Me.LDnSpeed.Location = New System.Drawing.Point(21, 24)
+        Me.LDnSpeed.ForeColor = System.Drawing.Color.SteelBlue
+        Me.LDnSpeed.Location = New System.Drawing.Point(29, 24)
         Me.LDnSpeed.Margin = New System.Windows.Forms.Padding(0)
         Me.LDnSpeed.Name = "LDnSpeed"
         Me.LDnSpeed.Size = New System.Drawing.Size(71, 12)
@@ -342,7 +366,7 @@ Public Class BandObject
         Me.LCapUp.AutoSize = True
         Me.LCapUp.BackColor = System.Drawing.Color.Transparent
         Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.LCapUp.ForeColor = System.Drawing.Color.AliceBlue
+        Me.LCapUp.ForeColor = System.Drawing.Color.SteelBlue
         Me.LCapUp.Location = New System.Drawing.Point(0, 2)
         Me.LCapUp.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapUp.Name = "LCapUp"
@@ -368,18 +392,19 @@ Public Class BandObject
         Me.TableLayoutPanel1.RowCount = 2
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(90, 40)
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(100, 40)
         Me.TableLayoutPanel1.TabIndex = 4
         '
         'BandObject
         '
+        Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.Black
         Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.DoubleBuffered = True
         Me.Margin = New System.Windows.Forms.Padding(0)
-        Me.MinimumSize = New System.Drawing.Size(90, 40)
+        Me.MaximumSize = New System.Drawing.Size(100, 40)
+        Me.MinimumSize = New System.Drawing.Size(100, 40)
         Me.Name = "BandObject"
-        Me.Size = New System.Drawing.Size(90, 40)
+        Me.Size = New System.Drawing.Size(100, 40)
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
@@ -395,6 +420,20 @@ Public Class BandObject
 
         Dim f As New DetailsDialog(info)
         f.Show()
+    End Sub
+
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        'If m.Msg = 5 Then
+        '    m.LParam = m.LParam.ToInt32 And &HFFFF0000 + 100
+        'End If
+        MyBase.WndProc(m)
+        If wlog IsNot Nothing Then
+            If wlog.BaseStream IsNot Nothing Then
+                If wlog.BaseStream.CanWrite Then
+                    wlog.WriteLine($"[{Date.Now.ToString("G")}],0x{m.Msg.ToString("X4")},0x{m.LParam.ToString("X8")},0x{m.WParam.ToString("X8")},{Width}")
+                End If
+            End If
+        End If
     End Sub
 End Class
 

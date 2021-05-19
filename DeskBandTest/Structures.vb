@@ -1,22 +1,23 @@
 ﻿Imports System.IO
 Imports System.Runtime.InteropServices
 
-<StructLayout(LayoutKind.Sequential)>
+<StructLayout(LayoutKind.Sequential, CharSet:=CharSet.Unicode)>
 Public Structure DESKBANDINFO
-    Dim dwMask As UInteger
+    Dim dwMask As DBIM
     Dim ptMinSize As POINTL
     Dim ptMaxSize As POINTL
     Dim ptIntegral As POINTL
     Dim ptActual As POINTL
+    <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=255)>
     Dim wszTitle As String
-    Dim dwModeFlags As Integer
+    Dim dwModeFlags As DBIMF
     Dim crBkgnd As Integer
 End Structure
 
 <StructLayout(LayoutKind.Sequential)>
 Public Structure POINTL
-    Dim x As Integer
-    Dim y As Integer
+    Dim X As Integer
+    Dim Y As Integer
 End Structure
 
 <StructLayout(LayoutKind.Sequential)>
