@@ -132,8 +132,8 @@
     <Compile Include="Enums.vb" />
     <Compile Include="NetworkBandwidthDetial.vb" />
     <Compile Include="NetworkTrafficCounter.vb" />
-    <Compile Include="Plugin\Core\PluginBase.vb" />
     <Compile Include="Structures.vb" />
+    <Compile Include="Utils.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BandObject.resx">

@@ -10,8 +10,8 @@ Public Class BandObject
     Inherits UserControl
     Implements IOleWindow, IDockingWindow, IDeskBand, IObjectWithSite, IPersist, IPersistStream, IDeskBand2
 
-    Friend Shared ReadOnly Title As String = "网速监控" '显示在选项里面的名称
-    Friend Shared ReadOnly Help As String = "测试工具条"
+    Private Shared ReadOnly Title As String = "网速监控" '显示在选项里面的名称
+    Private Shared ReadOnly Help As String = "测试工具条"
 
     Private BandObjectSite As IntPtr = IntPtr.Zero
     Private parentWindowHandle As IntPtr = IntPtr.Zero
@@ -19,9 +19,6 @@ Public Class BandObject
     Private mSettings As New Settings
     Private mSettingsChanged As Boolean = False
     Private mCounter As NetworkTrafficCounter
-
-    Private flog As FileStream
-    Private wlog As StreamWriter
 
 
 #Region "Properties"
@@ -62,8 +59,7 @@ Public Class BandObject
 #End Region
 
     ' 可创建的 COM 类必须具有一个不带参数的 Public Sub New() 
-    ' 否则， 将不会在 
-    ' COM 注册表中注册此类，且无法通过
+    ' 否则， 将不会在 COM 注册表中注册此类，且无法通过
     ' CreateObject 创建此类。
     Public Sub New()
         MyBase.New()
@@ -71,27 +67,16 @@ Public Class BandObject
         Hide()
         mCounter = New NetworkTrafficCounter()
 
-        ''根据DPI缩放系数，适当调整界面大小
-        'Dim scale As Integer = 0
-        'GetScaleFactorForMonitor(MonitorFromWindow(Handle, 0), scale)
-        'Width = CInt((scale / 100) * Width)
-        'Height = CInt((scale / 100) * Height)
-        flog = New FileStream("D:\dblog.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read)
-        wlog = New StreamWriter(flog)
-        wlog.WriteLine($"时间,事件,lparam,wparam,宽度")
-
         AddHandler mCounter.Tick, AddressOf CounterTick
         AddHandler SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
         AddHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
     End Sub
 
     Private Sub NetworkAvailbilityChangedHandler(sender As Object, e As Net.NetworkInformation.NetworkAvailabilityEventArgs)
-        SaveSettings()
         mCounter.RefreshCounters()
     End Sub
 
     Private Sub ShotdownHandler(sender As Object, e As EventArgs)
-        SaveSettings()
 
         RemoveHandler mCounter.Tick, AddressOf CounterTick
         RemoveHandler SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
@@ -101,6 +86,8 @@ Public Class BandObject
     Private Sub CounterTick(upSpeed As Long, downSpeed As Long)
         LUpSpeed.Text = GetSpeedString(upSpeed)
         LDnSpeed.Text = GetSpeedString(downSpeed)
+
+        mSettingsChanged = True
     End Sub
 
     Private Function GetSpeedString(speed As Long) As String
@@ -122,22 +109,13 @@ Public Class BandObject
         End Select
     End Function
 
-    Private Sub LoadSettings()
-        mSettings.totalUploadedBytes = My.Settings.UpBytes
-        mSettings.totalDownloadedBytes = My.Settings.DnBytes
+    Private Sub Recalc()
+        mSettings.totalUploadedBytes += mCounter.SentBytes
+        mSettings.totalDownloadedBytes = mCounter.ReceivedBytes
+        mCounter.ResetCounterNumberOnly()
     End Sub
 
-    Private Sub SaveSettings()
-        Return '以后再尝试其他的保存设置的方法
-        My.Settings.UpBytes = TotalBytesUp
-        My.Settings.DnBytes = TotalBytesDown
-        My.Settings.Save()
-    End Sub
 
-    'Private Function GetTooltipString() As String
-    '    'Return $"Network Traffic    Uploaded:{...}     Downloaded:{...}"
-    '    Return $"流量统计   上传：{GetDataSizeString(TotalBytesUp).PadLeft(9)}    下载：{GetDataSizeString(TotalBytesDown).PadLeft(9)}"
-    'End Function
 #Region "IDeskBand2"
 
     Public Function GetWindow(ByRef phwnd As IntPtr) As HResult Implements IOleWindow.GetWindow, IDockingWindow.GetWindow, IDeskBand.GetWindow, IDeskBand2.GetWindow
@@ -167,13 +145,10 @@ Public Class BandObject
     End Function
 
     Public Function ResizeBorderDW(ByRef prcBorder As RECT, <[In]> <MarshalAs(UnmanagedType.IUnknown)> punkToolbarSite As Object, fReserved As Boolean) As HResult Implements IDockingWindow.ResizeBorderDW, IDeskBand.ResizeBorderDW, IDeskBand2.ResizeBorderDW
-
-        'Width = prcBorder.Right - prcBorder.Left
         Return HResult.E_NOTIMPL
     End Function
 
     Public Function GetBandInfo(dwBandID As UInteger, dwViewMode As UInteger, ByRef pdbi As DESKBANDINFO) As HResult Implements IDeskBand.GetBandInfo, IDeskBand2.GetBandInfo
-        pdbi.wszTitle = Title
 
         pdbi.ptActual.x = Size.Width
         pdbi.ptActual.y = Size.Height
@@ -187,14 +162,9 @@ Public Class BandObject
         pdbi.ptIntegral.x = 0
         pdbi.ptIntegral.y = 0
 
-        'pdbi.wszTitle = "呵呵"
 
-
-        pdbi.dwMask = DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE Or DBIM.MODEFLAGS Or DBIM.INTEGRAL 'Or pdbi.dwMask Or DBIM.TITLE
-
-        'pdbi.crBkgnd = Drawing.Color.FromArgb(0, 0, 0, 0).ToArgb
-
-        pdbi.dwModeFlags = pdbi.dwModeFlags Or DBIMF.FIXED 'Or DBIM.BKCOLOR
+        pdbi.dwMask = DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE Or DBIM.MODEFLAGS Or DBIM.INTEGRAL
+        pdbi.dwModeFlags = pdbi.dwModeFlags Or DBIMF.FIXED
 
         Return HResult.S_OK
     End Function
@@ -230,13 +200,10 @@ Public Class BandObject
 
         If pUnkSite Is Nothing Then
             Try
-                SaveSettings()
                 parentWindowHandle = IntPtr.Zero
                 mCounter.Dispose()
-                Dispose(True)
-                wlog.Close()
-                flog.Close()
-                GC.Collect()
+
+                'Dispose(True)
             Catch ex As Exception
 
             End Try
@@ -246,7 +213,6 @@ Public Class BandObject
                 pUnkSite.GetWindow(parentWindowHandle)
                 SetParent(Handle, parentWindowHandle)
                 BandObjectSite = Marshal.GetIUnknownForObject(pUnkSite)
-                LoadSettings()
             Catch ex As Exception
 
             End Try
@@ -266,18 +232,30 @@ Public Class BandObject
     End Function
 
     Public Function IsDirty() As Integer Implements IPersistStream.IsDirty
-        Return 1 'S_FALSE
+        Return If(mSettingsChanged, 0, 1)
     End Function
 
     Public Function IPersistStream_Load(<[In]> <MarshalAs(UnmanagedType.Interface)> pStm As IStream) As HResult Implements IPersistStream.Load
+        mSettingsChanged = False
+        Dim data(15) As Byte, count As ULong = 0
+        pStm.Read(data, 16, count)
+        ConvertBlobToStructure(data, mSettings)
         Return HResult.S_OK
     End Function
 
     Public Function Save(<[In]> <MarshalAs(UnmanagedType.Interface)> pStm As IStream, <[In]> fClearDirty As Boolean) As HResult Implements IPersistStream.Save
+        If mSettingsChanged Then Recalc()
+
+        If fClearDirty Then mSettingsChanged = False
+        Dim data(15) As Byte, count As ULong = 0
+        ConvertStructureToBlob(mSettings, data)
+        pStm.Write(data, 16, count)
+
         Return HResult.S_OK
     End Function
 
     Public Function GetSizeMax(<Out> ByRef pcbSize As ULong) As HResult Implements IPersistStream.GetSizeMax
+        pcbSize = Marshal.SizeOf(mSettings)
         Return HResult.S_OK
     End Function
 
@@ -422,19 +400,6 @@ Public Class BandObject
         f.Show()
     End Sub
 
-    Protected Overrides Sub WndProc(ByRef m As Message)
-        'If m.Msg = 5 Then
-        '    m.LParam = m.LParam.ToInt32 And &HFFFF0000 + 100
-        'End If
-        MyBase.WndProc(m)
-        If wlog IsNot Nothing Then
-            If wlog.BaseStream IsNot Nothing Then
-                If wlog.BaseStream.CanWrite Then
-                    wlog.WriteLine($"[{Date.Now.ToString("G")}],0x{m.Msg.ToString("X4")},0x{m.LParam.ToString("X8")},0x{m.WParam.ToString("X8")},{Width}")
-                End If
-            End If
-        End If
-    End Sub
 End Class
 
 

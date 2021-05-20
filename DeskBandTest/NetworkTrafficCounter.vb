@@ -98,6 +98,11 @@ Friend NotInheritable Class NetworkTrafficCounter
         baseSendBytes = snd
     End Sub
 
+    Public Sub ResetCounterNumberOnly()
+        baseReceiveBytes += ReceivedBytes
+        baseSendBytes += SentBytes
+    End Sub
+
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' 要检测冗余调用
 

@@ -33,3 +33,4 @@ Public Structure Settings
     Dim totalUploadedBytes As Long
     Dim totalDownloadedBytes As Long
 End Structure
+
