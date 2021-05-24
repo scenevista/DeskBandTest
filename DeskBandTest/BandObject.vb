@@ -13,12 +13,17 @@ Public Class BandObject
     Private Shared ReadOnly Title As String = "网速监控" '显示在选项里面的名称
     Private Shared ReadOnly Help As String = "测试工具条"
 
+    Private Shared ReadOnly WindowWidth As Integer = 100
+    Private Shared ReadOnly WindowHeight As Integer = 40
+
+
     Private BandObjectSite As IntPtr = IntPtr.Zero
     Private parentWindowHandle As IntPtr = IntPtr.Zero
     Private mRenderComposited As Boolean = True
     Private mSettings As New Settings
     Private mSettingsChanged As Boolean = False
     Private mCounter As NetworkTrafficCounter
+
 
 
 #Region "Properties"
@@ -64,7 +69,7 @@ Public Class BandObject
     Public Sub New()
         MyBase.New()
         InitializeComponent()
-        Hide()
+        'Hide()
         mCounter = New NetworkTrafficCounter()
 
         AddHandler mCounter.Tick, AddressOf CounterTick
@@ -150,21 +155,19 @@ Public Class BandObject
 
     Public Function GetBandInfo(dwBandID As UInteger, dwViewMode As UInteger, ByRef pdbi As DESKBANDINFO) As HResult Implements IDeskBand.GetBandInfo, IDeskBand2.GetBandInfo
 
-        pdbi.ptActual.x = Size.Width
-        pdbi.ptActual.y = Size.Height
+        pdbi.ptActual.X = WindowWidth
+        pdbi.ptActual.Y = WindowHeight
 
-        pdbi.ptMaxSize.x = Size.Width
-        pdbi.ptMaxSize.y = Size.Height
+        pdbi.ptMaxSize.X = WindowWidth
+        pdbi.ptMaxSize.Y = WindowHeight
 
-        pdbi.ptMinSize.x = Size.Width
-        pdbi.ptMinSize.y = Size.Height
-
-        pdbi.ptIntegral.x = 0
-        pdbi.ptIntegral.y = 0
+        pdbi.ptMinSize.X = WindowWidth
+        pdbi.ptMinSize.Y = WindowHeight
 
 
-        pdbi.dwMask = DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE Or DBIM.MODEFLAGS Or DBIM.INTEGRAL
-        pdbi.dwModeFlags = pdbi.dwModeFlags Or DBIMF.FIXED
+        pdbi.dwMask = DBIM.ACTUAL Or DBIM.MAXSIZE Or DBIM.MINSIZE Or DBIM.MODEFLAGS
+
+        pdbi.dwModeFlags = DBIMF.FIXED
 
         Return HResult.S_OK
     End Function
@@ -201,8 +204,12 @@ Public Class BandObject
         If pUnkSite Is Nothing Then
             Try
                 parentWindowHandle = IntPtr.Zero
-                mCounter.Dispose()
 
+                RemoveHandler mCounter.Tick, AddressOf CounterTick
+                RemoveHandler SystemEvents.EventsThreadShutdown, AddressOf ShotdownHandler
+                RemoveHandler Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged, AddressOf NetworkAvailbilityChangedHandler
+
+                mCounter.Dispose()
                 'Dispose(True)
             Catch ex As Exception
 
@@ -235,22 +242,26 @@ Public Class BandObject
         Return If(mSettingsChanged, 0, 1)
     End Function
 
-    Public Function IPersistStream_Load(<[In]> <MarshalAs(UnmanagedType.Interface)> pStm As IStream) As HResult Implements IPersistStream.Load
+    Public Function IPersistStream_Load(<MarshalAs(UnmanagedType.Interface)> pStm As IStream) As HResult Implements IPersistStream.Load
         mSettingsChanged = False
         Dim data(15) As Byte, count As ULong = 0
         pStm.Read(data, 16, count)
         ConvertBlobToStructure(data, mSettings)
+        Marshal.ReleaseComObject(pStm)
         Return HResult.S_OK
     End Function
 
-    Public Function Save(<[In]> <MarshalAs(UnmanagedType.Interface)> pStm As IStream, <[In]> fClearDirty As Boolean) As HResult Implements IPersistStream.Save
+    Public Function Save(<MarshalAs(UnmanagedType.Interface)> pStm As IStream, <[In]> fClearDirty As Boolean) As HResult Implements IPersistStream.Save
         If mSettingsChanged Then Recalc()
 
         If fClearDirty Then mSettingsChanged = False
         Dim data(15) As Byte, count As ULong = 0
+
+        ConvertStructureToBlob(Guid.Parse(BandObject.ClassId), data)
+        pStm.Write(data, 16, count)
         ConvertStructureToBlob(mSettings, data)
         pStm.Write(data, 16, count)
-
+        Marshal.ReleaseComObject(pStm)
         Return HResult.S_OK
     End Function
 
@@ -298,12 +309,12 @@ Public Class BandObject
         Me.LCapDn.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapDn.AutoSize = True
         Me.LCapDn.BackColor = System.Drawing.Color.Transparent
-        Me.LCapDn.Font = New System.Drawing.Font("Arial Narrow", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.LCapDn.Font = New System.Drawing.Font("Consolas", 9.0!, System.Drawing.FontStyle.Bold)
         Me.LCapDn.ForeColor = System.Drawing.Color.SteelBlue
-        Me.LCapDn.Location = New System.Drawing.Point(0, 22)
+        Me.LCapDn.Location = New System.Drawing.Point(0, 23)
         Me.LCapDn.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapDn.Name = "LCapDn"
-        Me.LCapDn.Size = New System.Drawing.Size(21, 16)
+        Me.LCapDn.Size = New System.Drawing.Size(21, 14)
         Me.LCapDn.TabIndex = 1
         Me.LCapDn.Text = "Dn"
         Me.LCapDn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -343,12 +354,12 @@ Public Class BandObject
         Me.LCapUp.Anchor = System.Windows.Forms.AnchorStyles.Left
         Me.LCapUp.AutoSize = True
         Me.LCapUp.BackColor = System.Drawing.Color.Transparent
-        Me.LCapUp.Font = New System.Drawing.Font("Arial Narrow", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.LCapUp.Font = New System.Drawing.Font("Consolas", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LCapUp.ForeColor = System.Drawing.Color.SteelBlue
-        Me.LCapUp.Location = New System.Drawing.Point(0, 2)
+        Me.LCapUp.Location = New System.Drawing.Point(0, 3)
         Me.LCapUp.Margin = New System.Windows.Forms.Padding(0)
         Me.LCapUp.Name = "LCapUp"
-        Me.LCapUp.Size = New System.Drawing.Size(21, 16)
+        Me.LCapUp.Size = New System.Drawing.Size(21, 14)
         Me.LCapUp.TabIndex = 0
         Me.LCapUp.Text = "Up"
         Me.LCapUp.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
